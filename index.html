@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vượt Ải Tri Thức - Phiên Bản Shiba Cute</title>
+    <title>Vượt Ải Tri Thức</title>
+    <link rel="icon" href="logo.png?v=2" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;900&display=swap" rel="stylesheet">
     
     <style>
@@ -253,6 +254,7 @@
 
     <script>
         const soundTingTing = new Audio("https://www.myinstants.com/media/sounds/ding-sound-effect_2.mp3");
+        const soundApplause = new Audio("https://www.myinstants.com/media/sounds/crowd-applause.mp3");
 
         // HÀM XỬ LÝ TOÀN MÀN HÌNH
         function toggleFullScreen() {
@@ -282,13 +284,13 @@
             { q: "Câu 1: Tìm phương án sai: Theo Hồ Chí Minh, điều kiện để thực hiện đại đoàn kết toàn dân tộc là:", options: ["A. Tôn trọng sự tương đồng của tập thể, tìm điểm khác biệt của cá nhân.", "B. Kế thừa truyền thống yêu nước - nhân nghĩa - đoàn kết.", "C. Có lòng khoan dung, độ lượng với con người.", "D. Có niềm tin vào nhân dân."], correct: 0 },
             { q: "Câu 2: Theo Hồ Chí Minh, Mặt trận dân tộc thống nhất phải dựa trên cơ sở:", options: ["A. Đảm bảo lợi ích tối cao của dân tộc, quyền lợi cơ bản của các tầng lớp nhân dân", "B. Đảm bảo quyền lợi cơ bản của công – nông", "C. Đảm bảo lợi ích của nhân dân lao động", "D. Đảm bảo lợi ích tối cao của giai cấp công nhân"], correct: 0 },
             { q: "Câu 3:  Chọn phương án đúng nhất: Trong tư tưởng Hồ Chí Minh, đại đoàn kết dân tộc...", options: ["A. Mục tiêu, nhiệm vụ hàng đầu của cả dân tộc", "B. Là vấn đề quyết định thành công của cách mạng", "C. Là vấn đề cơ bản có ý nghĩa chiến lược, quyết định thành công của cách mạng", "D. Là vấn đề sách lược"], correct: 2 },
-            { q: "Câu 4: Chọn phương án trả lời đúng theo tư tưởng Hồ Chí Minh về lực lượng chủ yếu của khối đại đoàn kết dân tộc?", options: ["A. Công nhân", "B. Công nhân, nông dân", "C. Học trò, nhà buôn", "D. Công nhân, nông dân, lao động trí óc"], correct: 3 },
+            { q: "Câu 4: Để xây dựng khối đại đoàn kết, Hồ Chí Minh đã ví von lòng khoan dung, độ lượng của con người với hình ảnh nào?", options: ["A. Bàn tay có ngón dài, ngón ngắn. ", "B. Sông to, biển rộng thì bao nhiêu nước cũng chứa được. ", "C. Chở thuyền cũng là dân, lật thuyền cũng là dân. ", "D. Cái chén nhỏ, cái đĩa cạn."], correct: 1 },
             { q: "Câu 5: Chọn phương án trả lời đúng theo tư tưởng Hồ Chí Minh về nguyên tắc ngoại giao:", options: ["A. Phải cứng rắn về nguyên tắc", "B. Phải mềm dẻo về sách lược", "C. Vừa cứng rắn về nguyên tắc, vừa mềm dẻo về sách lược", "D. “Dĩ bất biến, ứng vạn biến”"], correct: 3 },
-            { q: "Câu 6: Chọn phương án đúng nhất: Luận điểm đoàn kết, đoàn kết, “thành công, thành công, đại thành công” của Hồ Chí Minh được trích từ tác phẩm nào?", options: ["A. Bài nói chuyện trong Đại hội thành lập Mặt trận Tổ quốc Việt Nam lần IV", "B. Bài nói chuyện tại Hội nghị mở rộng Uỷ ban Trung ương Mặt trận Tổ quốc Việt Nam", "C. Bài nói chuyện tại Đại hội đại biểu Mặt trận Tổ quốc Việt Nam lần thứ III", "D. Bài nói chuyện tại Đại hội đại biểu Mặt trận Tổ quốc Việt Nam lần thứ II"], correct: 3 }
+            { q: "Câu 6: Chọn phương án đúng nhất: Luận điểm:<br>“Đoàn kết, đoàn kết, đại đoàn kết<br>Thành công, thành công, đại thành công”<br>của Hồ Chí Minh được trích từ tác phẩm nào?", options: ["A. Bài nói chuyện trong Đại hội thành lập Mặt trận Tổ quốc Việt Nam lần IV", "B. Bài nói chuyện tại Hội nghị mở rộng Uỷ ban Trung ương Mặt trận Tổ quốc Việt Nam", "C. Bài nói chuyện tại Đại hội đại biểu Mặt trận Tổ quốc Việt Nam lần thứ III", "D. Bài nói chuyện tại Đại hội đại biểu Mặt trận Tổ quốc Việt Nam lần thứ II"], correct: 3 }
         ];
 
         // QUÀ
-        let remainingPrizes = ["Bim bim", "Kẹo mút", "Tràng pháo tay", "Thanh kẹo cao su", "Vở", "Hộp bánh"];
+        let remainingPrizes = ["Bim bim", "Kẹo mút", "Tràng pháo tay", "Thanh kẹo cao su", "Sổ tay", "Hộp bánh"];
         remainingPrizes = remainingPrizes.sort(() => Math.random() - 0.5);
 
         // VIDEO MEME MP4 ĐÃ TẢI VỀ MÁY
@@ -303,7 +305,7 @@
             }
 
             const qInfo = questions[currentQuestionIndex];
-            document.getElementById("question-text").innerText = qInfo.q;
+            document.getElementById("question-text").innerHTML = qInfo.q;
             
             const optionsContainer = document.getElementById("options-container");
             optionsContainer.innerHTML = ""; 
@@ -344,19 +346,27 @@
 
         function openGift(boxElement) {
             if (boxElement.classList.contains("disabled")) return; 
+            
             const prize = remainingPrizes.pop(); 
             boxElement.innerHTML = prize;
             boxElement.classList.add("winner");
+
+            // --- THÊM PHẦN PHÁT TIẾNG VỖ TAY ---
+            soundApplause.currentTime = 0; // Trả về đầu bài
+            soundApplause.play();          // Bắt đầu phát
 
             const allBoxes = document.querySelectorAll(".gift-box");
             allBoxes.forEach(b => { if (b !== boxElement) b.classList.add("disabled"); });
 
             currentQuestionIndex++;
+            
+            // --- ĐỔI THÀNH 3000ms (3 giây) ---
             setTimeout(() => {
+                soundApplause.pause(); // Ép dừng tiếng vỗ tay sau đúng 3s (tránh file nhạc bị dài)
                 document.getElementById("gift-screen").style.display = "none";
                 document.getElementById("quiz-screen").style.display = "block";
                 loadQuestion();
-            }, 3000);
+            }, 3000); 
         }
 
         // Hiện Video MP4 Local
