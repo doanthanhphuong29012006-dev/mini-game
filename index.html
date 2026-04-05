@@ -27,12 +27,9 @@
             justify-content: center;
             padding: 20px;
             
-            /* ======== FIX CỨNG ẢNH NỀN Ở ĐÂY ======== */
-            /* Sửa 'shiba.png' thành đúng tên file ảnh của bạn (VD: 'anh-nen.jpg') */
-            /* Lưu ý: File ảnh phải để chung một thư mục với file index.html này */
+            /* Tên file ảnh nền của bạn */
             background: url('shiba.png') no-repeat center center fixed;
             background-size: cover;
-            /* ======================================== */
             
             position: relative; 
         }
@@ -41,7 +38,7 @@
         .container { 
             width: 100%;
             max-width: 650px; 
-            background: rgba(255, 255, 255, 0.95); /* Thêm chút trong suốt nhẹ cho nền trắng */
+            background: rgba(255, 255, 255, 0.95); 
             padding: 40px 30px; 
             border-radius: 30px; 
             border: 4px solid var(--shiba-light);
@@ -150,7 +147,7 @@
             border: none;
         }
 
-        /* MEME OVERLAY */
+        /* MEME OVERLAY (DÙNG THẺ VIDEO HTML5) */
         #meme-overlay { 
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(92, 65, 50, 0.9); 
@@ -158,18 +155,33 @@
             backdrop-filter: blur(5px);
         }
         
+        /* CSS cho video Shorts lớn hơn */
         .video-wrapper { 
-            height: 85vh; aspect-ratio: 9/16; position: relative; 
-            border-radius: 24px; overflow: hidden; pointer-events: none; 
-            background: #000; box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
-            display: flex; justify-content: center; align-items: center; 
+            height: 92vh; /* Tăng chiều cao lên gần như phủ hết overlay */
+            /* aspect-ratio: 9/16; -- Đã loại bỏ để điều chỉnh kích thước lớn hơn */
+            width: 60%; /* Tăng chiều rộng để video không bị co lại */
+            position: relative; 
+            border-radius: 24px; 
+            overflow: hidden; 
+            pointer-events: none; 
+            background: #000; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
             border: 4px solid var(--shiba-orange);
+            margin-bottom: 20px; /* Thêm khoảng cách với nút đóng */
         }
         
-        .video-wrapper iframe { width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; z-index: 2; }
-        
-        .loading-text { color: var(--shiba-orange); font-size: 20px; font-weight: 900; position: absolute; z-index: 1; animation: pulse 1s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+        /* Đảm bảo video phủ hết wrapper */
+        .video-wrapper video { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            position: absolute; 
+            top: 0; left: 0; 
+            z-index: 2; 
+        }
 
         #meme-overlay h2 { 
             color: var(--text-dark); margin-top: 20px; font-size: 1.1rem; font-weight: 800; cursor: pointer; 
@@ -178,15 +190,41 @@
         }
         #meme-overlay h2:hover { background: var(--shiba-orange); color: white; transform: translateY(-3px); }
 
+        /* --- NÚT FULL SCREEN --- */
+        #fullscreen-btn {
+            position: fixed; 
+            top: 15px; 
+            right: 15px; 
+            z-index: 1001;
+            padding: 10px 15px; 
+            font-size: 14px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            border-radius: 12px; 
+            background-color: var(--shiba-orange); 
+            color: white; 
+            border: none;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.1); 
+            transition: 0.2s;
+            font-family: 'Nunito', sans-serif;
+        }
+        #fullscreen-btn:hover { 
+            transform: translateY(-2px); 
+            filter: brightness(1.1); 
+        }
+
         @media (max-width: 500px) {
             .options { grid-template-columns: 1fr; }
             .gifts-grid { grid-template-columns: repeat(2, 1fr); }
             h1 { font-size: 1.8rem; }
             .container { padding: 30px 20px; border-radius: 20px; }
+            #fullscreen-btn { top: 10px; right: 10px; font-size: 12px; padding: 8px 12px;}
         }
     </style>
 </head>
 <body>
+
+    <button id="fullscreen-btn" onclick="toggleFullScreen()">🔲 Toàn màn hình</button>
 
     <div id="quiz-screen" class="container">
         <h1>Vượt Ải Tri Thức</h1>
@@ -208,31 +246,53 @@
 
     <div id="meme-overlay">
         <div class="video-wrapper">
-            <div class="loading-text">Đang tải hình phạt...</div>
-            <iframe id="meme-video" src="" allow="autoplay"></iframe>
+            <video id="meme-video" preload="auto" loop playsinline></video>
         </div>
-        <h2 onclick="closeMeme()">❌ Đóng & Thử Lại</h2>
+        <h2 onclick="closeMeme()">❌ Đóng</h2>
     </div>
 
     <script>
         const soundTingTing = new Audio("https://www.myinstants.com/media/sounds/ding-sound-effect_2.mp3");
 
+        // HÀM XỬ LÝ TOÀN MÀN HÌNH
+        function toggleFullScreen() {
+            const btn = document.getElementById("fullscreen-btn");
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log(`Lỗi khi mở toàn màn hình: ${err.message}`);
+                });
+                btn.innerHTML = "🔳 Thu nhỏ";
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                    btn.innerHTML = "🔲 Toàn màn hình";
+                }
+            }
+        }
+
+        document.addEventListener("fullscreenchange", function() {
+            const btn = document.getElementById("fullscreen-btn");
+            if (!document.fullscreenElement) {
+                btn.innerHTML = "🔲 Toàn màn hình";
+            }
+        });
+
         // DATA CÂU HỎI
         const questions = [
-            { q: "Câu 1: 1 + 1 bằng mấy?", options: ["1", "2", "3", "4"], correct: 1 },
-            { q: "Câu 2: Con mèo kêu như thế nào?", options: ["Gâu gâu", "Meo meo", "Ò ó o", "Cục tác"], correct: 1 },
-            { q: "Câu 3: Mặt trời mọc ở hướng nào?", options: ["Đông", "Tây", "Nam", "Bắc"], correct: 0 },
-            { q: "Câu 4: Việt Nam có bao nhiêu tỉnh thành?", options: ["61", "62", "63", "64"], correct: 2 },
-            { q: "Câu 5: Tác giả của Truyện Kiều là ai?", options: ["Nam Cao", "Nguyễn Du", "Nguyễn Trãi", "Hồ Xuân Hương"], correct: 1 },
-            { q: "Câu 6: Nước nào đông dân nhất thế giới (2024)?", options: ["Mỹ", "Trung Quốc", "Ấn Độ", "Nga"], correct: 2 }
+            { q: "Câu 1: Tìm phương án sai: Theo Hồ Chí Minh, điều kiện để thực hiện đại đoàn kết toàn dân tộc là:", options: ["A. Tôn trọng sự tương đồng của tập thể, tìm điểm khác biệt của cá nhân.", "B. Kế thừa truyền thống yêu nước - nhân nghĩa - đoàn kết.", "C. Có lòng khoan dung, độ lượng với con người.", "D. Có niềm tin vào nhân dân."], correct: 1 },
+            { q: "Câu 2: Nguyên tắc hoạt động của Mặt trận là:", options: ["A. Hiệp thương dân chủ", "B. Tập trung", "C. Thống nhất", "D. Tôn trọng ý kiến cá nhânCục tác"], correct: 0 },
+            { q: "Câu 3: Đại đoàn kết dân tộc là:", options: ["A. Mục tiêu, nhiệm vụ hàng đầu của cả dân tộc", "B. Mục tiêu, nhiệm vụ hàng đầu của Đảng", "C. Mục tiêu, nhiệm vụ hàng đầu của quần chúng cách mạng", "D. Cả A, B"], correct: 3 },
+            { q: "Câu 4: Chọn phương án trả lời đúng theo tư tưởng Hồ Chí Minh về lực lượng chủ yếu của khối đại đoàn kết dân tộc?", options: ["A. Công nhân", "B. Công nhân, nông dân", "C. Học trò, nhà buôn", "D. Công nhân, nông dân, lao động trí óc"], correct: 3 },
+            { q: "Câu 5: Chọn phương án trả lời đúng theo tư tưởng Hồ Chí Minh về nguyên tắc ngoại giao:", options: ["A. Phải cứng rắn về nguyên tắc", "B. Phải mềm dẻo về sách lược", "C. Vừa cứng rắn về nguyên tắc, vừa mềm dẻo về sách lược", "D. “Dĩ bất biến, ứng vạn biến”"], correct: 3 },
+            { q: "Câu 6: Câu “Một dân tộc không tự lực cánh sinh mà ngồi chờ dân tộc khác giúp thì không xứng đáng được độc lập” của Hồ Chí Minh ra đời năm bao nhiêu:", options: ["A. 1950", "B. 1951", "C. 1952", "D. 1953"], correct: 2 }
         ];
 
         // QUÀ
-        let remainingPrizes = ["100.000 VNĐ", "Cái nịt", "Tràng pháo tay", "Thẻ cào 50K", "1 ly trà sữa", "Gói Bim Bim"];
+        let remainingPrizes = ["Bim bim", "Kẹo mút", "Tràng pháo tay", "Thanh kẹo cao su", "Vở", "Hộp bánh"];
         remainingPrizes = remainingPrizes.sort(() => Math.random() - 0.5);
 
-        // VIDEO MEME
-        const youtubeMemeIDs = ["Kv_8UchWRAE", "6dTX_onTNc8", "W90o8BeCr-g"];
+        // VIDEO MEME MP4 ĐÃ TẢI VỀ MÁY
+        const localMemes = ["meme1.mp4", "meme2.mp4", "meme3.mp4", "meme4.mp4"];
         let currentQuestionIndex = 0;
 
         function loadQuestion() {
@@ -266,7 +326,7 @@
                 document.getElementById("quiz-screen").style.display = "none";
                 document.getElementById("gift-screen").style.display = "block";
             } else {
-                showYoutubeMeme();
+                showMeme(); // Gọi hàm showMeme MP4 mới
             }
         }
 
@@ -296,20 +356,27 @@
                 document.getElementById("gift-screen").style.display = "none";
                 document.getElementById("quiz-screen").style.display = "block";
                 loadQuestion();
-            }, 2500);
+            }, 3000);
         }
 
-        function showYoutubeMeme() {
-            const randomID = youtubeMemeIDs[Math.floor(Math.random() * youtubeMemeIDs.length)];
-            const iframe = document.getElementById("meme-video");
-            const videoUrl = `https://www.youtube.com/embed/${randomID}?autoplay=1&controls=0&loop=1&playlist=${randomID}&modestbranding=1&rel=0&disablekb=1`;
-            iframe.src = videoUrl;
+        // Hiện Video MP4 Local
+        function showMeme() {
+            const randomVideo = localMemes[Math.floor(Math.random() * localMemes.length)];
+            const videoElement = document.getElementById("meme-video");
+            
+            // Gắn link video mp4 và phát ngay
+            videoElement.src = randomVideo;
             document.getElementById("meme-overlay").style.display = "flex";
+            videoElement.play();
         }
 
+        // Đóng Meme Video MP4
         function closeMeme() {
             document.getElementById("meme-overlay").style.display = "none";
-            document.getElementById("meme-video").src = ""; 
+            const videoElement = document.getElementById("meme-video");
+            
+            videoElement.pause(); // Dừng phát
+            videoElement.src = ""; // Xóa bộ nhớ
         }
 
         loadQuestion();
