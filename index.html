@@ -351,9 +351,8 @@
 
     <div id="meme-overlay">
         <div class="video-wrapper">
-            <video id="meme-video" preload="auto" loop playsinline></video>
+            <video id="meme-video" preload="auto" playsinline></video>
         </div>
-        <h2 id="close-meme-btn" onclick="closeMeme()">Đóng & Thử Lại</h2>
     </div>
 
     <script>
@@ -444,6 +443,10 @@
                 btn.onclick = () => checkAnswer(index);
                 optionsContainer.appendChild(btn);
             });
+
+            document.getElementById("meme-video").addEventListener('ended', function() {
+            closeMeme(); // Tự động gọi hàm đóng màn hình Meme
+        });
         }
 
 
@@ -481,7 +484,7 @@
                 document.getElementById("gift-screen").style.display = "none";
                 document.getElementById("quiz-screen").style.display = "block";
                 loadQuestion();
-            }, 3000);
+            }, 5000);
         }
 
         function checkAnswer(selectedIndex) {
@@ -501,29 +504,22 @@
 
         function showMeme(isCorrect) {
             const videoElement = document.getElementById("meme-video");
-            const btnClose = document.getElementById("close-meme-btn");
-
+            
             videoElement.volume = 1.0;
-            if (typeof isMusicPlaying !== 'undefined' && isMusicPlaying) bgMusic.pause();
+            if (typeof isMusicPlaying !== 'undefined' && isMusicPlaying) bgMusic.pause(); 
 
             if (isCorrect) {
-                // XỬ LÝ MEME ĐÚNG
+                // XỬ LÝ MEME ĐÚNG (Chỉ đổi link video, không cần đổi chữ nút nữa)
                 const randomVideo = correctMemes[Math.floor(Math.random() * correctMemes.length)];
                 videoElement.src = randomVideo;
-                // Đổi nút thành giao diện nhận quà
-                btnClose.innerHTML = "Đóng & Chọn Quà";
-                btnClose.style.background = "#FF85A2";
             } else {
                 // XỬ LÝ MEME SAI (Chống lặp)
                 let availableMemes = wrongMemes.filter(meme => meme !== lastPlayedMeme);
                 if (availableMemes.length === 0) availableMemes = wrongMemes;
 
                 const randomVideo = availableMemes[Math.floor(Math.random() * availableMemes.length)];
-                lastPlayedMeme = randomVideo;
+                lastPlayedMeme = randomVideo; 
                 videoElement.src = randomVideo;
-                // Đổi nút thành giao diện thử lại
-                btnClose.innerHTML = "Đóng & Thử Lại";
-                btnClose.style.background = "var(--shiba-light)";
             }
 
             document.getElementById("meme-overlay").style.display = "flex";
